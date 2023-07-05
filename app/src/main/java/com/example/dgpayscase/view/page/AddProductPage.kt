@@ -1,0 +1,117 @@
+package com.example.dgpayscase.view.page
+
+import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.dgpayscase.R
+import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
+
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun AddProductPage(navController: NavController) {
+    val productName = remember { mutableStateOf("") }
+    val productAmount = remember { mutableStateOf("") }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Add Product") },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+                navigationIcon = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    }
+                }
+            )
+        },
+        content = {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .statusBarsPadding()
+                    .imePadding(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                    item {
+                        Image(
+                            modifier = Modifier.size(100.dp, 100.dp),
+                            painter = painterResource(id = R.drawable.baseline_image_24),
+                            contentDescription = ""
+                        )
+                        Text(text = "Select Product Image")
+                        Spacer(modifier = Modifier.size(20.dp))
+                        TextField(
+                            value = productName.value,
+                            onValueChange = { productName.value = it },
+                            label = { Text(text = "Name") }
+                        )
+                        Spacer(modifier = Modifier.size(10.dp))
+                        TextField(
+                            value = productAmount.value,
+                            onValueChange = { productAmount.value = it },
+                            label = { Text(text = "Amount") },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        )
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Button(onClick = {}) {
+                            Text(text = "Save")
+                        }
+                    }
+            }
+        }
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun AddProductPagePreview() {
+    DgpaysCaseTheme {
+        AddProductPage(rememberNavController())
+    }
+}
