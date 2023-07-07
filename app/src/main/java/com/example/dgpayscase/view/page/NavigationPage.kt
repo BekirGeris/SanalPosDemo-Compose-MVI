@@ -5,10 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -95,26 +95,54 @@ fun NavigationPage(navController: NavController) {
                         label = { Text(text = string) },
                         icon = {
                             when (index) {
-                                0 -> Icon(
-                                    painter = painterResource(id = R.drawable.baseline_home_24),
-                                    contentDescription = ""
-                                )
-
-                                1 -> Icon(
-                                    painter = painterResource(id = R.drawable.baseline_shopping_basket_24),
-                                    contentDescription = ""
-                                )
-
-                                2 -> Icon(
-                                    painter = painterResource(id = R.drawable.baseline_list_24),
-                                    contentDescription = ""
-                                )
+                                0 -> NavItemIcon(0, R.drawable.baseline_home_24)
+                                1 -> NavItemIcon(5, R.drawable.baseline_shopping_basket_24)
+                                2 -> NavItemIcon(0, R.drawable.baseline_list_24)
                             }
                         })
                 }
             }
         }
     )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun NavItemIcon(count: Int, id: Int) {
+    if (count == 0) {
+        Icon(
+            painter = painterResource(id = id),
+            contentDescription = ""
+        )
+    } else {
+        BadgedBox(
+            badge = {
+                Box(
+                    modifier = Modifier.background(
+                        Color.Red,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        modifier = Modifier.padding(
+                            top = 1.dp,
+                            bottom = 1.dp,
+                            start = 5.dp,
+                            end = 5.dp
+                        ),
+                        text = count.toString(),
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }) {
+            Icon(
+                painter = painterResource(id = id),
+                contentDescription = ""
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)

@@ -39,7 +39,7 @@ import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AddProductPage(navController: NavController) {
+fun DetailProductPage(navController: NavController) {
     val productName = remember { mutableStateOf("") }
     val productAmount = remember { mutableStateOf("") }
 
@@ -70,34 +70,34 @@ fun AddProductPage(navController: NavController) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                    item {
-                        Image(
-                            modifier = Modifier.size(100.dp, 100.dp),
-                            painter = painterResource(id = R.drawable.baseline_image_24),
-                            contentDescription = ""
-                        )
-                        TextButton(onClick = {
-
-                        }) {
-                            Text(text = "Select Product Image")
-                        }
-                        TextField(
-                            value = productName.value,
-                            onValueChange = { productName.value = it },
-                            label = { Text(text = "Name") }
-                        )
-                        Spacer(modifier = Modifier.size(10.dp))
-                        TextField(
-                            value = productAmount.value,
-                            onValueChange = { productAmount.value = it },
-                            label = { Text(text = "Amount") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-                        )
-                        Spacer(modifier = Modifier.size(10.dp))
-                        Button(onClick = {}) {
-                            Text(text = "Save")
-                        }
+                item {
+                    Image(
+                        modifier = Modifier.size(100.dp, 100.dp),
+                        painter = painterResource(id = R.drawable.baseline_image_24),
+                        contentDescription = ""
+                    )
+                    TextButton(onClick = {
+                        
+                    }) {
+                        Text(text = "Change Product Image")
                     }
+                    TextField(
+                        value = productName.value,
+                        onValueChange = { productName.value = it },
+                        label = { Text(text = "Name") }
+                    )
+                    Spacer(modifier = Modifier.size(10.dp))
+                    TextField(
+                        value = productAmount.value,
+                        onValueChange = { productAmount.value = it },
+                        label = { Text(text = "Amount") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Button(onClick = {}) {
+                        Text(text = "Update")
+                    }
+                }
             }
         }
     )
@@ -105,8 +105,8 @@ fun AddProductPage(navController: NavController) {
 
 @Preview(showBackground = true)
 @Composable
-fun AddProductPagePreview() {
+fun DetailProductPagePreview() {
     DgpaysCaseTheme {
-        AddProductPage(rememberNavController())
+        DetailProductPage(rememberNavController())
     }
 }
