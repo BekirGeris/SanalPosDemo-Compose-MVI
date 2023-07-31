@@ -23,8 +23,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
@@ -49,9 +52,26 @@ import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 @Composable
 fun BasketPage(navController: NavController) {
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Basket") },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+                actions = {
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_delete_outline_24),
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    }
+                }
+            )
+        },
         content = {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()).fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

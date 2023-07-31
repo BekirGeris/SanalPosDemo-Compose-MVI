@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,9 +26,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,20 +51,42 @@ import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomePage(navController: NavController) {
+    val isDropdownOpen = remember { mutableStateOf(false) }
     Scaffold(
-        content = {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                LazyVerticalGrid(
-                    columns = GridCells.Adaptive(190.dp),
-                    ) {
-                    items(100) {
-                        val itemCount = remember { mutableIntStateOf(0) }
-                        HomeCard(navController, itemCount, it)
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Home") },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
+                actions = {
+                    IconButton(onClick = {
+                        isDropdownOpen.value = true
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_more_vert_24),
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
                     }
+                    DropdownMenu(
+                        expanded = isDropdownOpen.value,
+                        onDismissRequest = { isDropdownOpen.value = false }) {
+                        DropdownMenuItem(
+                            text = { Text(text = "Log out") },
+                            onClick = {
+                                isDropdownOpen.value = false
+                            })
+                    }
+                }
+            )
+        },
+        content = {
+            LazyVerticalGrid(
+                contentPadding = it,
+                columns = GridCells.Adaptive(190.dp),
+            ) {
+                items(20) {
+                    val itemCount = remember { mutableIntStateOf(0) }
+                    HomeCard(navController, itemCount, it)
                 }
             }
         },

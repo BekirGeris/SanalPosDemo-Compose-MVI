@@ -4,13 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "product")
-data class Product(
+@Entity(tableName = "basket")
+class Basket(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("id")
-    var id: Int,
-    var name: String,
-    var amount: String,
-    var imageBitmap: String,
-    var basketCount: Int = 0
+    var id: Int? = null
 )

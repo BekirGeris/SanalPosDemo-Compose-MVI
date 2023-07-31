@@ -46,7 +46,7 @@ fun DetailProductPage(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Add Product") },
+                title = { Text(text = "Detail Product") },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
                 navigationIcon = {
                     IconButton(onClick = {
@@ -54,6 +54,17 @@ fun DetailProductPage(navController: NavController) {
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+                            contentDescription = "",
+                            tint = Color.Black
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_delete_outline_24),
                             contentDescription = "",
                             tint = Color.Black
                         )
