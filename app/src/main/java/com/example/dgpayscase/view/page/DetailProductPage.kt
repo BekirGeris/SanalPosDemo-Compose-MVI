@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -95,14 +96,20 @@ fun DetailProductPage(navController: NavController) {
                     TextField(
                         value = productName.value,
                         onValueChange = { productName.value = it },
-                        label = { Text(text = "Name") }
+                        label = { Icon(painter = painterResource(id = R.drawable.baseline_home_24), contentDescription = "") }
                     )
                     Spacer(modifier = Modifier.size(10.dp))
                     TextField(
                         value = productAmount.value,
                         onValueChange = { productAmount.value = it },
                         label = { Text(text = "Amount") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        leadingIcon = {
+                            Icon(
+                                modifier = Modifier.padding(0.dp),
+                                painter = painterResource(id = R.drawable.baseline_delete_outline_24),
+                                contentDescription = "")
+                        }
                     )
                     Spacer(modifier = Modifier.size(10.dp))
                     Button(onClick = {}) {

@@ -6,6 +6,7 @@ import com.example.dgpayscase.data.dao.BasketDao
 import com.example.dgpayscase.data.dao.ProductDao
 import com.example.dgpayscase.data.dao.TransactionDao
 import com.example.dgpayscase.data.db.AppDatabase
+import com.example.dgpayscase.data.repository.local.LocalRepository
 import com.example.dgpayscase.data.repository.local.LocalRepositoryImpl
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,11 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideLocalRepositoryImpl(basketDao: BasketDao, productDao: ProductDao, transactionDao: TransactionDao) = LocalRepositoryImpl(basketDao, productDao, transactionDao)
+    fun provideLocalRepository(
+        basketDao: BasketDao,
+        productDao: ProductDao,
+        transactionDao: TransactionDao
+    ): LocalRepository = LocalRepositoryImpl(basketDao, productDao, transactionDao)
 
     @Singleton
     @Provides
@@ -36,8 +41,9 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext app: Context) = Room.databaseBuilder(app, AppDatabase::class.java, "begers" )
-        .allowMainThreadQueries()
-        .addMigrations(*AppDatabase.getMigrations())
-        .build()
+    fun provideAppDatabase(@ApplicationContext app: Context) =
+        Room.databaseBuilder(app, AppDatabase::class.java, "begers")
+            .allowMainThreadQueries()
+            .addMigrations(*AppDatabase.getMigrations())
+            .build()
 }

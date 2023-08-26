@@ -1,8 +1,9 @@
 package com.example.dgpayscase.di
 
 import com.example.dgpayscase.data.repository.AppRepository
-import com.example.dgpayscase.data.repository.local.LocalRepositoryImpl
-import com.example.dgpayscase.data.repository.remote.RemoteRepositoryImpl
+import com.example.dgpayscase.data.repository.firebase.FirebaseRepository
+import com.example.dgpayscase.data.repository.local.LocalRepository
+import com.example.dgpayscase.data.repository.remote.RemoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +17,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideAppRepository(
-        localRepositoryImpl: LocalRepositoryImpl,
-        remoteRepositoryImpl: RemoteRepositoryImpl
-    ) = AppRepository(localRepositoryImpl, remoteRepositoryImpl)
+        localRepository: LocalRepository,
+        remoteRepository: RemoteRepository,
+        firebaseRepository: FirebaseRepository
+    ) = AppRepository(localRepository, remoteRepository, firebaseRepository)
 
 }

@@ -5,11 +5,11 @@ import androidx.room.RoomDatabase
 import com.example.dgpayscase.data.dao.BasketDao
 import com.example.dgpayscase.data.dao.ProductDao
 import com.example.dgpayscase.data.dao.TransactionDao
-import com.example.dgpayscase.model.Basket
-import com.example.dgpayscase.model.Product
-import com.example.dgpayscase.model.Transaction
+import com.example.dgpayscase.model.dto.BasketRoom
+import com.example.dgpayscase.model.dto.ProductRoom
+import com.example.dgpayscase.model.dto.TransactionRoom
 
-@Database(entities = [Basket::class, Product::class, Transaction::class], version = 1)
+@Database(entities = [BasketRoom::class, ProductRoom::class, TransactionRoom::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun basketDao(): BasketDao
