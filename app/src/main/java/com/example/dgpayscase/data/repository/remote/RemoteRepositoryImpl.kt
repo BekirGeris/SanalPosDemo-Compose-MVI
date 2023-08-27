@@ -44,19 +44,19 @@ class RemoteRepositoryImpl @Inject constructor(private val repository: RemoteRep
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun addProduct(product: Product): Flow<Response<Any>> {
+    suspend fun addProduct(product: Product): Flow<Resource<Any>> {
         return generateFlow { repository.addProduct(product) }
     }
 
-    suspend fun updateProduct(product: Product): Flow<Response<Any>> {
+    suspend fun updateProduct(product: Product): Flow<Resource<Any>> {
         return generateFlow { repository.updateProduct(product) }
     }
 
-    suspend fun deleteProduct(product: Product): Flow<Response<Any>> {
+    suspend fun deleteProduct(product: Product): Flow<Resource<Any>> {
         return generateFlow { repository.deleteProduct(product) }
     }
 
-    suspend fun getProducts(): Flow<Response<ArrayList<Product>>> {
+    suspend fun getProducts(): Flow<Resource<ArrayList<Product>>> {
         return generateFlow { repository.getProducts() }
     }
 }

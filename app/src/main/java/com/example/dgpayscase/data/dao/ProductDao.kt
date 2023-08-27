@@ -4,20 +4,20 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.dgpayscase.model.dto.ProductRoom
+import com.example.dgpayscase.model.Product
 
 @Dao
 interface ProductDao {
 
     @Insert
-    suspend fun insert(productRoom: ProductRoom)
+    suspend fun insert(product: Product)
 
     @Update
-    suspend fun update(productRoom: ProductRoom)
+    suspend fun update(product: Product)
 
     @Query("delete from product")
     suspend fun nukeTableProduct()
 
     @Query("select * from product")
-    suspend fun getAllProduct() : List<ProductRoom>
+    suspend fun getAllProduct() : List<Product>
 }

@@ -1,7 +1,7 @@
 package com.example.dgpayscase.data.repository.firebase
 
 import androidx.lifecycle.MutableLiveData
-import com.example.dgpayscase.model.dto.TransactionFirebase
+import com.example.dgpayscase.model.Transaction
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -12,21 +12,21 @@ import javax.inject.Inject
 
 @ActivityScoped
 class FirebaseRepositoryImpl @Inject constructor(firebaseDatabase: FirebaseDatabase) : FirebaseRepository {
-    var transactionFirebaseList = MutableLiveData<List<TransactionFirebase>>()
+    var transactionList = MutableLiveData<List<Transaction>>()
     private var refUser: DatabaseReference
 
     init {
-        transactionFirebaseList = MutableLiveData()
+        transactionList = MutableLiveData()
         refUser = firebaseDatabase.getReference("transactions")
     }
 
     override fun getAllTransactions() {
         refUser.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val list = ArrayList<TransactionFirebase>()
+                val list = ArrayList<Transaction>()
 
                 for (c in snapshot.children) {
-                    val user = c.getValue(TransactionFirebase::class.java)
+                    val user = c.getValue(Transaction::class.java)
 
                     user?.let {
                         it.key = c.key!!
@@ -34,7 +34,7 @@ class FirebaseRepositoryImpl @Inject constructor(firebaseDatabase: FirebaseDatab
                     }
                 }
 
-                transactionFirebaseList.value = list
+                transactionList.value = list
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -43,20 +43,20 @@ class FirebaseRepositoryImpl @Inject constructor(firebaseDatabase: FirebaseDatab
         })
     }
 
-    override fun saveTransaction(transactionFirebase: TransactionFirebase) {
-        refUser.push().setValue(transactionFirebase)
+    override fun saveTransaction(transaction: Transaction) {
+        refUser.push().setValue(transaction)
     }
 
-    override fun updateTransaction(transactionFirebase: TransactionFirebase) {
+    override fun updateTransaction(transaction: Transaction) {
         val data = HashMap<String, Any>()
-        data["txnType"] = transactionFirebase.txnType
-        data["txnId"] = transactionFirebase.txnId
-        data["txnDate"] = transactionFirebase.txnDate
-        data["totalAmount"] = transactionFirebase.totalAmount
-        refUser.child(transactionFirebase.key).updateChildren(data)
+        data["txnType"] = transaction.txnType
+        data["txnId"] = transaction.txnId
+        data["txnDate"] = transaction.txnDate
+        data["totalAmount"] = transaction.totalAmount
+        refUser.child(transaction.key).updateChildren(data)
     }
 
-    override fun deleteTransaction(transactionFirebase: TransactionFirebase) {
-        refUser.child(transactionFirebase.key).removeValue()
+    override fun deleteTransaction(transaction: Transaction) {
+        refUser.child(transaction.key).removeValue()
     }
 }
