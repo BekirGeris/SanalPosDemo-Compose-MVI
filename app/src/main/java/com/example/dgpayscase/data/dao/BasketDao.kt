@@ -22,9 +22,9 @@ interface BasketDao {
     @Query("select * from basket")
     suspend fun getAllBasket() : List<Basket>
 
-    @Query("select distinct * from basket order by id desc Limit 1")
+    @Query("select distinct * from basket order by roomId desc Limit 1")
     fun getCurrentBasket(): LiveData<Basket>
 
-    @Query("select distinct * from basket  order by id desc Limit 1")
+    @Query("select distinct * from basket  order by roomId desc Limit 1")
     fun getCurrentBasketSync(): Basket?
 }

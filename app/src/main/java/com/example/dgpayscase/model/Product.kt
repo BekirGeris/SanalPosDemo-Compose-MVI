@@ -9,7 +9,7 @@ data class Product(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("roomId")
     var roomId: Int,
-    var remoteId: Int,
+    var id: Int,
     var name: String,
     var amount: String,
     var imageBitmap: String,
