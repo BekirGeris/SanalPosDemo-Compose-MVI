@@ -22,7 +22,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = ""
+    private const val BASE_URL = "http://192.168.1.11:3000/api/"
 
     @Singleton
     @Provides
@@ -30,7 +30,11 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideFirebaseRepository(firebaseDatabase: FirebaseDatabase) : FirebaseRepository = FirebaseRepositoryImpl(firebaseDatabase)
+    fun provideFirebaseRepositoryImpl(firebaseDatabase: FirebaseDatabase) : FirebaseRepositoryImpl = FirebaseRepositoryImpl(firebaseDatabase)
+
+    @Singleton
+    @Provides
+    fun provideRemoteRepositoryImpl(remoteRepository: RemoteRepository) : RemoteRepositoryImpl = RemoteRepositoryImpl(remoteRepository)
 
     @Singleton
     @Provides
@@ -71,8 +75,4 @@ object NetworkModule {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return interceptor
     }
-
-    @Singleton
-    @Provides
-    fun provideRemoteRepositoryImpl(remoteRepository: RemoteRepository) = RemoteRepositoryImpl(remoteRepository)
 }

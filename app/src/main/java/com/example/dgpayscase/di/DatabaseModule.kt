@@ -21,11 +21,11 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideLocalRepository(
+    fun provideLocalRepositoryImpl(
         basketDao: BasketDao,
         productDao: ProductDao,
         transactionDao: TransactionDao
-    ): LocalRepository = LocalRepositoryImpl(basketDao, productDao, transactionDao)
+    ): LocalRepositoryImpl = LocalRepositoryImpl(basketDao, productDao, transactionDao)
 
     @Singleton
     @Provides

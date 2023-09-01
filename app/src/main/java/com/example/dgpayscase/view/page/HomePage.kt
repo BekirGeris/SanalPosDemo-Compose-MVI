@@ -1,6 +1,8 @@
 package com.example.dgpayscase.view.page
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,29 +32,78 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.dgpayscase.R
+import com.example.dgpayscase.model.Product
 import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
+import com.example.dgpayscase.view.MainContract
+import com.example.dgpayscase.viewmodel.HomeViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomePage(navController: NavController) {
+    val context = LocalContext.current
+    val viewModel: HomeViewModel = hiltViewModel()
+    val productList = remember { mutableStateListOf<Product>() }
     val isDropdownOpen = remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = true) {
+        this.launch {
+            viewModel.uiState.collect {
+                when (it.state) {
+                    is MainContract.HomeState.Idle -> {
+                        Log.d("bekbek", "Idle")
+                    }
+
+                    is MainContract.HomeState.Products -> {
+                        Log.d("bekbek", "Products")
+                        productList.addAll(it.state.data)
+                    }
+
+                    is MainContract.HomeState.Loading -> {
+                        Log.d("bekbek", "Loading")
+                    }
+
+                    is MainContract.HomeState.Error -> {
+                        Log.d("bekbek", "Error ${it.state.error}")
+                    }
+                }
+            }
+        }
+        viewModel.setEvent(MainContract.Event.FetchProduct)
+    }
+
+    LaunchedEffect(key1 = true) {
+        this.launch {
+            viewModel.effect.collect {
+                when (it) {
+                    is MainContract.Effect.ShowToast -> {
+                        Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -80,13 +132,25 @@ fun HomePage(navController: NavController) {
             )
         },
         content = {
-            LazyVerticalGrid(
-                contentPadding = it,
-                columns = GridCells.Adaptive(190.dp),
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                items(20) {
-                    val itemCount = remember { mutableIntStateOf(0) }
-                    HomeCard(navController, itemCount, it)
+                if (productList.size != 0) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(190.dp),
+                    ) {
+                        items(productList.size) {
+                            val product = productList[it]
+                            val itemCount = remember { mutableIntStateOf(0) }
+                            HomeCard(navController, itemCount, it)
+                        }
+                    }
+                } else {
+                    CircularProgressIndicator()
                 }
             }
         },

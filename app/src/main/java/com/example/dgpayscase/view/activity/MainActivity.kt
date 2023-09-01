@@ -18,7 +18,9 @@ import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 import com.example.dgpayscase.view.page.AddProductPage
 import com.example.dgpayscase.view.page.DetailProductPage
 import com.example.dgpayscase.view.page.NavigationPage
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
