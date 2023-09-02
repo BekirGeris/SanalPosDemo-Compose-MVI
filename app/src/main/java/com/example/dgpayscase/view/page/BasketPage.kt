@@ -42,15 +42,19 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.dgpayscase.R
 import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
+import com.example.dgpayscase.viewmodel.BasketViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BasketPage(navController: NavController) {
+    val viewModel: BasketViewModel = hiltViewModel()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,7 +75,9 @@ fun BasketPage(navController: NavController) {
         },
         content = {
             Column(
-                modifier = Modifier.padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding()).fillMaxSize(),
+                modifier = Modifier
+                    .padding(top = it.calculateTopPadding(), bottom = it.calculateBottomPadding())
+                    .fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

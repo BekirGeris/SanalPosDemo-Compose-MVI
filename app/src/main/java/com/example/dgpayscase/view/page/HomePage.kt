@@ -1,7 +1,6 @@
 package com.example.dgpayscase.view.page
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +26,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -34,8 +34,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -52,7 +53,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.dgpayscase.R
-import com.example.dgpayscase.model.Product
 import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 import com.example.dgpayscase.view.MainContract
 import com.example.dgpayscase.viewmodel.HomeViewModel
@@ -64,33 +64,11 @@ import kotlinx.coroutines.launch
 fun HomePage(navController: NavController) {
     val context = LocalContext.current
     val viewModel: HomeViewModel = hiltViewModel()
-    val productList = remember { mutableStateListOf<Product>() }
+    val state by viewModel.uiState.collectAsState()
     val isDropdownOpen = remember { mutableStateOf(false) }
 
     LaunchedEffect(key1 = true) {
-        this.launch {
-            viewModel.uiState.collect {
-                when (it.state) {
-                    is MainContract.HomeState.Idle -> {
-                        Log.d("bekbek", "Idle")
-                    }
-
-                    is MainContract.HomeState.Products -> {
-                        Log.d("bekbek", "Products")
-                        productList.addAll(it.state.data)
-                    }
-
-                    is MainContract.HomeState.Loading -> {
-                        Log.d("bekbek", "Loading")
-                    }
-
-                    is MainContract.HomeState.Error -> {
-                        Log.d("bekbek", "Error ${it.state.error}")
-                    }
-                }
-            }
-        }
-        viewModel.setEvent(MainContract.Event.FetchProduct)
+        viewModel.setEvent(MainContract.Event(MainContract.HomeEvent.FetchData))
     }
 
     LaunchedEffect(key1 = true) {
@@ -132,40 +110,53 @@ fun HomePage(navController: NavController) {
             )
         },
         content = {
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                    .background(Color.Black)
+                    .padding(top = it.calculateTopPadding()),
+                contentAlignment = Alignment.Center
             ) {
-                if (productList.size != 0) {
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(190.dp),
-                    ) {
-                        items(productList.size) {
-                            val product = productList[it]
-                            val itemCount = remember { mutableIntStateOf(0) }
-                            HomeCard(navController, itemCount, it)
+                when (state.value) {
+                    is MainContract.HomeState.Idle,
+                    is MainContract.HomeState.Loading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    is MainContract.HomeState.Products -> {
+                        val list = (state.value as MainContract.HomeState.Products).data
+                        LazyVerticalGrid(
+                            columns = GridCells.Adaptive(190.dp),
+                        ) {
+                            items(list.count()) { item ->
+                                val product = list[item]
+                                val itemCount = remember { mutableIntStateOf(0) }
+                                HomeCard(navController, itemCount, item)
+                            }
                         }
                     }
-                } else {
-                    CircularProgressIndicator()
+
+                    is MainContract.HomeState.Error -> {
+                        OutlinedButton(onClick = {
+                            viewModel.setEvent(MainContract.Event(MainContract.HomeEvent.FetchData))
+                        }) {
+                            Text(text = "Tekrar Dene")
+                        }
+                    }
                 }
-            }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate("add_product_page")
-                },
-                containerColor = MaterialTheme.colorScheme.secondary
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_add_24),
-                    contentDescription = "",
-                    tint = Color.White
-                )
+                FloatingActionButton(
+                    modifier = Modifier.padding(10.dp).align(Alignment.BottomEnd),
+                    onClick = {
+                        navController.navigate("add_product_page")
+                    },
+                    containerColor = MaterialTheme.colorScheme.secondary
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_add_24),
+                        contentDescription = "",
+                        tint = Color.White
+                    )
+                }
             }
         }
     )

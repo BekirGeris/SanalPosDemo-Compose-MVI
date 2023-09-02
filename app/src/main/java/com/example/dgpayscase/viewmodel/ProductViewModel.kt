@@ -6,13 +6,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductViewModel @Inject constructor(val appRepository: AppRepository) : BaseViewModel<MainContract.Event, MainContract.State<MainContract.HomeState>, MainContract.Effect>() {
+class ProductViewModel @Inject constructor(private val appRepository: AppRepository) : BaseViewModel<MainContract.Event<MainContract.ProductEvent>, MainContract.State<MainContract.HomeState>, MainContract.Effect>() {
     override fun createInitialState(): MainContract.State<MainContract.HomeState> {
         TODO("Not yet implemented")
     }
 
-    override fun handleEvent(event: MainContract.Event) {
+    override fun handleEvent(event: MainContract.Event<MainContract.ProductEvent>) {
         TODO("Not yet implemented")
     }
-
 }

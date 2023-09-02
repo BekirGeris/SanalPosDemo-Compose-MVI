@@ -8,21 +8,21 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val appRepository: AppRepository) : BaseViewModel<MainContract.Event, MainContract.State<MainContract.HomeState>, MainContract.Effect>() {
+class HomeViewModel @Inject constructor(private val appRepository: AppRepository) : BaseViewModel<MainContract.Event<MainContract.HomeEvent>, MainContract.State<MainContract.HomeState>, MainContract.Effect>() {
 
     override fun createInitialState(): MainContract.State<MainContract.HomeState> {
         return MainContract.State(
-            state = MainContract.HomeState.Idle
+            value = MainContract.HomeState.Idle
         )
     }
 
-    override fun handleEvent(event: MainContract.Event) {
-        when (event) {
-            is MainContract.Event.FetchProduct -> fetchProduct()
+    override fun handleEvent(event: MainContract.Event<MainContract.HomeEvent>) {
+        when (event.value) {
+            is MainContract.HomeEvent.FetchData -> fetchData()
         }
     }
 
-    private fun fetchProduct() {
+    private fun fetchData() {
         viewModelScope.launch {
             setState { MainContract.State(MainContract.HomeState.Loading) }
             try {

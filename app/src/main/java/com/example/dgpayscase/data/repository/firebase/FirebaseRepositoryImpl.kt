@@ -12,11 +12,10 @@ import javax.inject.Inject
 
 @ActivityScoped
 class FirebaseRepositoryImpl @Inject constructor(firebaseDatabase: FirebaseDatabase) : FirebaseRepository {
-    var transactionList = MutableLiveData<List<Transaction>>()
+    var transactionList = MutableLiveData<ArrayList<Transaction>>()
     private var refUser: DatabaseReference
 
     init {
-        transactionList = MutableLiveData()
         refUser = firebaseDatabase.getReference("transactions")
     }
 
@@ -38,7 +37,7 @@ class FirebaseRepositoryImpl @Inject constructor(firebaseDatabase: FirebaseDatab
             }
 
             override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
+                transactionList.value = arrayListOf()
             }
         })
     }
