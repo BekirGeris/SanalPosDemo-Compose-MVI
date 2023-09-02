@@ -58,7 +58,7 @@ fun BasketPage(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Basket") },
+                title = { Text(text = "Basket test") },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = MaterialTheme.colorScheme.primary),
                 actions = {
                     IconButton(onClick = {
