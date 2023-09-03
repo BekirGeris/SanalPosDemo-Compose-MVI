@@ -11,13 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.dgpayscase.model.Product
 import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 import com.example.dgpayscase.view.page.AddProductPage
 import com.example.dgpayscase.view.page.DetailProductPage
 import com.example.dgpayscase.view.page.NavigationPage
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -63,8 +67,10 @@ fun MainPage() {
         composable("add_product_page") {
             AddProductPage(navController)
         }
-        composable("detail_product_page") {
-            DetailProductPage(navController)
+        composable("detail_product_page/{product}", arguments = listOf (navArgument("product") { type = NavType.StringType })) {
+            val json = it.arguments?.getString("product")
+            val product = Gson().fromJson(json, Product::class.java)
+            DetailProductPage(navController, product)
         }
     }
 }

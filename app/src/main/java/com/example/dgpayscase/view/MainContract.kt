@@ -26,7 +26,8 @@ class MainContract {
     }
 
     sealed class ProductEvent {
-        object FetchData : ProductEvent()
+        data class SaveProduct(val product: Product) : ProductEvent()
+        data class UpdateProduct(val product: Product) : ProductEvent()
     }
 
     // Ui View States
@@ -57,6 +58,8 @@ class MainContract {
     sealed class ProductState {
         object Idle : ProductState()
         object Loading : ProductState()
+        object SaveProduct : ProductState()
+        object UpdateProduct : ProductState()
         data class Products(val data: ArrayList<Product>) : ProductState()
         data class Error(val error: String?) : ProductState()
     }

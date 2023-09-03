@@ -14,4 +14,6 @@ data class Product(
     var amount: String,
     var imageBitmap: String,
     var basketCount: Int = 0
-)
+) {
+    constructor() : this(0, 0, "", "", "")
+}

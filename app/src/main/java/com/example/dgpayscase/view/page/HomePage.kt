@@ -53,9 +53,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.dgpayscase.R
+import com.example.dgpayscase.model.Product
 import com.example.dgpayscase.ui.theme.DgpaysCaseTheme
 import com.example.dgpayscase.view.MainContract
 import com.example.dgpayscase.viewmodel.HomeViewModel
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,7 +115,6 @@ fun HomePage(navController: NavController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black)
                     .padding(top = it.calculateTopPadding()),
                 contentAlignment = Alignment.Center
             ) {
@@ -126,12 +127,12 @@ fun HomePage(navController: NavController) {
                     is MainContract.HomeState.Products -> {
                         val list = (state.value as MainContract.HomeState.Products).data
                         LazyVerticalGrid(
+                            modifier = Modifier.align(Alignment.TopCenter),
                             columns = GridCells.Adaptive(190.dp),
                         ) {
                             items(list.count()) { item ->
                                 val product = list[item]
-                                val itemCount = remember { mutableIntStateOf(0) }
-                                HomeCard(navController, itemCount, item)
+                                HomeCard(navController, product)
                             }
                         }
                     }
@@ -163,7 +164,7 @@ fun HomePage(navController: NavController) {
 }
 
 @Composable
-private fun HomeCard(navController: NavController, itemCount: MutableIntState, index: Int) {
+private fun HomeCard(navController: NavController, product: Product) {
     Card(
         modifier = Modifier
             .padding(all = 5.dp)
@@ -175,7 +176,8 @@ private fun HomeCard(navController: NavController, itemCount: MutableIntState, i
     ) {
         Box(
             modifier = Modifier.clickable {
-                navController.navigate("detail_product_page")
+                val productJson = Gson().toJson(product)
+                navController.navigate("detail_product_page/${productJson}")
             }
         ) {
             Column(
@@ -200,13 +202,13 @@ private fun HomeCard(navController: NavController, itemCount: MutableIntState, i
                         horizontalAlignment = Alignment.Start
                     ) {
                         Text(
-                            text = "$${index}0.54",
+                            text = "$${product.amount}",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = "name $index",
+                            text = "name ${product.name}",
                             fontSize = 15.sp
                         )
                     }
@@ -224,9 +226,9 @@ private fun HomeCard(navController: NavController, itemCount: MutableIntState, i
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    if (itemCount.intValue != 0) {
+                    if (product.basketCount != 0) {
                         CarIconButton(id = R.drawable.baseline_remove_24) {
-                            itemCount.intValue--
+                            product.basketCount--
                         }
                         Box(
                             modifier = Modifier
@@ -237,7 +239,7 @@ private fun HomeCard(navController: NavController, itemCount: MutableIntState, i
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = itemCount.intValue.toString(),
+                                text = product.basketCount.toString(),
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp,
                                 color = Color.White,
@@ -245,11 +247,11 @@ private fun HomeCard(navController: NavController, itemCount: MutableIntState, i
                             )
                         }
                         CarIconButton(id = R.drawable.baseline_add_24) {
-                            itemCount.intValue++
+                            product.basketCount++
                         }
                     } else {
                         CarIconButton(id = R.drawable.baseline_add_shopping_cart_24) {
-                            itemCount.intValue++
+                            product.basketCount++
                         }
                     }
                 }
